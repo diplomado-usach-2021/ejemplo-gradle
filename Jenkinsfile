@@ -10,8 +10,6 @@
             }
             
 
-  
-
             stage("Run"){
                 steps{
                     script {
