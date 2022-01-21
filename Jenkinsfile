@@ -5,6 +5,8 @@
                 steps{
                     script {
                              println "Stage: ${env.STAGE_NAME}"
+                             sh " whoami; ls -ltr "
+                             sh  "chmod +x gradlew "
                              sh "./gradlew clean build "
                     }
                 } 
@@ -29,7 +31,8 @@
                 steps{
                     script {
                           println "Stage: ${env.STAGE_NAME}"    
-                         sh " ./gradlew bootRun "
+                          sh " nohup bash gradlew bootRun & "
+                          sleep 20
                     }
                 }
             }
@@ -38,7 +41,7 @@
                 steps{
                     script {
                              println "Stage: ${env.STAGE_NAME}"
-                             sh "curl -X GET 'http://localhost:8082/rest/mscovid/test?msg=testing'"
+                             sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
                     }
                 }
             }
