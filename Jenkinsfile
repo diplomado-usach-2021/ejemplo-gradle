@@ -29,6 +29,8 @@
                 } 
             }
 
+/*
+
             stage("Mensaje Slack"){
                 steps{
                     script {                           
@@ -44,7 +46,7 @@
                     }
                 } 
             }
-
+   */
 
 
         }
