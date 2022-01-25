@@ -57,7 +57,7 @@
 		}
 		
 		failure {
-            slackSend (color: '#FF0000', message: "Build Failure:[${env.USER}][${env.JOB_NAME}] [${params.builtTool}] Ejecución fallida en stage : ${STAGE}")
+            slackSend (color: '#FF0000', message: "Build Failure [${env.USER}][${env.JOB_NAME}] [${params.builtTool}] Ejecución fallida en stage : ${STAGE}")
 			error "Ejecución fallida en stage ${STAGE}"
 		}
 	 }
