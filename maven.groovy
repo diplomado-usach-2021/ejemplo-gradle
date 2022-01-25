@@ -7,13 +7,14 @@
 def call(){
   
              stage("Compile Code"){
+                 STAGE = env.STAGE_NAME
                   sh  "chmod +x mvnw "
                   sh " ./mvnw clean compile -e"
     
             }
             
             stage('SonarQube analysis') {
-
+                STAGE = env.STAGE_NAME
                 def scannerHome = tool 'sonar-scanner';
                 withSonarQubeEnv('sonarqube-server') { 
                                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=ejemplo-maven-key  -Dsonar.sources=src -Dsonar.java.binaries=build "
@@ -25,18 +26,21 @@ def call(){
    
    
             stage("Test Code"){
+                      STAGE = env.STAGE_NAME
                       sh  " ./mvnw clean test -e "
             }
 
 
             
             stage("Jar Code"){
+                      STAGE = env.STAGE_NAME
                       sh  " ./mvnw clean package -e "
             }
 
 
 
-             stage('Guardando WAR') {             
+             stage('Guardando WAR') {
+                              STAGE = env.STAGE_NAME             
                               archiveArtifacts 'build/*.jar'
       
             }
@@ -55,15 +59,18 @@ def call(){
  
             
             stage("Run Jar"){
+                              STAGE = env.STAGE_NAME
                                sh  "nohup bash mvnw spring-boot:run &"
                                sleep 20
             }
 			
           stage("Testing Application"){
+                              STAGE = env.STAGE_NAME
                                sh  " curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing' "
             }
 
          stage('nexus') {
+                STAGE = env.STAGE_NAME
                 nexusPublisher nexusInstanceId: 'nexus_test',
                 nexusRepositoryId: 'test-nexus',
                 packages: [
@@ -80,7 +87,6 @@ def call(){
                         ]
                     ]
                 ]
-            
         }
 
   
