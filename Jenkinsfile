@@ -1,20 +1,2 @@
-   pipeline {
-    agent any
-    stages{
-
-
-        
-      stage("Pipeline"){
-                steps{
-                    script {
-                           echo "pipeline"
-                    }
-                } 
-            }
-
-
-        }
-  }  	
-
-
-  
+library ('pipeline-devops')
+ejecucion.call()
