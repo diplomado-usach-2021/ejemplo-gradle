@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-DevOpsUsach2020Application<DevOpsUsach2020>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.devopsusach2020.DevOpsUsach2020Application",
+            "projectName": "DevOpsUsach2020",
+            "args": ""
+        }
+    ]
+}

@@ -1,0 +1,104 @@
+   pipeline {
+    agent any
+    stages{
+             stage("Build & unit test"){
+                steps{
+                    script {
+                             println "Stage: ${env.STAGE_NAME}"
+                             sh " whoami; ls -ltr "
+                             sh  "chmod +x gradlew "
+                             sh "./gradlew clean build "
+                             echo "${env.WORKSPACE}"
+                             echo "${WORKSPACE}";
+                    }
+                } 
+            }
+            
+
+            stage("sonar"){
+                steps{
+                    script {
+                          println "Stage: ${env.STAGE_NAME}"  
+                            def scannerHome = tool 'sonar-scanner';
+                             withSonarQubeEnv('sonarqube-server') { 
+                                sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=ejemplo-gradle-key  -Dsonar.sources=src -Dsonar.java.binaries=build "
+         
+
+                    }
+                }
+              }
+            }
+
+/*
+           stage('Guardando WAR') {             
+                steps{
+                    script {
+                              archiveArtifacts 'build/libs/*.jar'
+
+                }
+             }
+            }
+*/
+
+            stage("Run"){
+                steps{
+                    script {
+                          println "Stage: ${env.STAGE_NAME}"    
+                          sh " nohup bash gradlew bootRun & "
+                          sleep 20
+                    }
+                }
+            }
+			
+          stage("Testing Application"){
+                steps{
+                    script {
+                             println "Stage: ${env.STAGE_NAME}"
+                             sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
+                    }
+                }
+            }
+
+/*
+          stage("Nexus"){
+                steps{
+                    script {
+                            println "Stage: ${env.STAGE_NAME}" 
+                                            steps{
+                             sh 'echo ${WORKSPACE}'
+                                  script {
+                               nexusPublisher nexusInstanceId: 'nexus_test', nexusRepositoryId: 'test-nexus',  packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: "${WORKSPACE}/build/libs/DevOpsUsach2020-0.0.1.jar	"]], mavenCoordinate: [artifactId: 'DevOpsUsach2020', groupId: 'com.devopsusach2020', packaging: 'jar', version: '0.0.3']]]                }
+                         }
+                    }
+                }
+            }
+*/
+           
+            stage('nexus') {
+            steps {
+                nexusPublisher nexusInstanceId: 'nexus_test',
+                nexusRepositoryId: 'test-nexus',
+                packages: [
+                    [
+                        $class: 'MavenPackage',
+                        mavenAssetList: [
+                            [classifier: '', extension: '', filePath: "${env.WORKSPACE}/build/libs/DevOpsUsach2020-0.0.1.jar"]
+                        ],
+                        mavenCoordinate: [
+                            artifactId: 'DevOpsUsach2020',
+                            groupId: 'com.devopsusach2020',
+                            packaging: 'jar',
+                            version: '0.0.3'
+                        ]
+                    ]
+                ]
+            }
+        }
+
+            
+		
+   }
+  }  	
+
+
+  
